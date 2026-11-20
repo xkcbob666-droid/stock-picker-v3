@@ -78,7 +78,7 @@ def normalize(df, source):
 def fetch_all():
     for source, fn in [("腾讯", ak.stock_zh_a_spot_tx),
                        ("东财", ak.stock_zh_a_spot_em),
-                       ("新浪", ak.stock_zh_a_spot)]:
+                       ("新浪", ak.stock_zh_a_spot_sina)]:
         try:
             df = fn()
             print(f"[数据源] 用 {source}")
