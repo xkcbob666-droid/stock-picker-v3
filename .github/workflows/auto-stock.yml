@@ -1,0 +1,38 @@
+name: 每日自动选股-V3大师版
+
+on:
+  workflow_dispatch:  # ✅ 支持手动 Run workflow（就是你要的按钮）
+  schedule:
+    - cron: '35 1 * * 1-5'  # UTC时间 1:35 = 北京时间 9:35，周一到周五开盘自动跑
+  push:
+    branches: [ main ]
+
+jobs:
+  run-pick:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 安装Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install akshare pandas -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+      - name: 执行选股脚本，生成json
+        run: python build_site.py
+
+      - name: 提交更新的选股数据
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json candidates.json version.json
+          git commit -m "🤖自动更新选股数据 $(date +%Y-%m-%d)" || echo "无数据变更"
+          git push
