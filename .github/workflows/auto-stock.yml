@@ -3,15 +3,10 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 1 * * *'
+  push:
 
 permissions:
   contents: write
-
-  workflow_dispatch:  # ✅ 支持手动 Run workflow（就是你要的按钮）
-  schedule:
-    - cron: '35 1 * * 1-5'  # UTC时间 1:35 = 北京时间 9:35，周一到周五开盘自动跑
-  push:
-    branches: [ main ]
 
 jobs:
   run-pick:
